@@ -1,14 +1,14 @@
 <template>
   <section class="src-componentes-navigator-vue">
     <div id="navigator">      
-      <button id="reset"  @click="restart()">
-        {{ !termino?"NEW COLORS!":'PLAY AGAIN!' }} <!-- New colors -->
+      <button id="reset"  @click="restart();">
+        {{ !!$store.state.termino?"NEW COLORS!":'PLAY AGAIN!' }} <!-- New colors -->
       </button>        
-      <span id="message"> {{ mensaje }}</span>
-      <button id="easy" :class="{ selected: !isHardNav }" @click="changeEasy()">
+      <span id="message"> {{ $store.state.mensajeChequeo }}</span>
+      <button id="easy" :class="{ selected: !$store.state.isHardNav }" @click="changeEasy()">
         easy
       </button>
-      <button id="hard" :class="{ selected: isHardNav }" @click="changeHard()">
+      <button id="hard" :class="{ selected: $store.state.isHardNav }" @click="changeHard()">
         hard
       </button>
       <br />
@@ -20,37 +20,28 @@
 <script>
 export default {
   name: "src-componentes-navigator-vue",
-  props: ['mensaje','termino'],
+  props: [],
 
   mounted() {
   },
 
   data() {
-    return {
-      isHardNav: true,      
-      colorCount:6,                  
+    return {                              
     };
   },
-  methods: {
-    restart() {
-        this.$emit("restart");
-    },
+  methods: {    
     changeHard() {
-      if (!this.isHardNav) {
-        this.isHardNav = true;              
-        this.colorCount=6
-        this.$emit("is-hard-navigator", this.isHardNav);
-        this.$emit("color-count", this.colorCount);
-        this.$emit("restart");
+      if (!this.$store.state.isHardNav) {
+        this.$store.dispatch('setIsHardNav', true);                
+        this.$store.dispatch('setColorCount', 6);        
+        this.restart();
       }
     },
     changeEasy() {
-      if (this.isHardNav) {
-        this.isHardNav = false;              
-        this.colorCount=3
-        this.$emit("is-hard-navigator", this.isHardNav);
-        this.$emit("color-count", this.colorCount);
-        this.$emit("restart");
+      if (this.$store.state.isHardNav) {        
+        this.$store.dispatch('setIsHardNav', false);
+        this.$store.dispatch('setColorCount', 3);                
+        this.restart();
       }
     },    
   },

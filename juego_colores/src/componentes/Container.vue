@@ -1,11 +1,13 @@
 <template>
   <section class="src-componentes-container">
+    
     <div id="container">
-      <div v-for="i in this.colorCount" :key="i">
+      <div v-for="i in $store.state.colorCount" :key="i">
         <div
           class="square"
-          ref="squares"
-          :style="{ 'background-color': colores[i - 1] }"
+          ref="squares"          
+          :style="{ 'background-color': $store.state.colors[i - 1] }" 
+
           @click="chequea"
         ></div>
       </div>
@@ -16,7 +18,7 @@
 <script>
 export default {
   name: "src-componentes-container",
-  props: ['colores','colorHeader','colorCount'],
+  props: [],
   mounted() {
             
   },
@@ -33,16 +35,15 @@ export default {
       },
     chequea(e){
       const color = e.target.style.backgroundColor
-      if (color === this.colorHeader )      {
-        this.setAllColorsTo(color)
-        this.mensaje = "You Picked Right!"        
-        this.$emit("termino", true);      
+      if (color ===  this.$store.state.pickedColor )      {
+        this.setAllColorsTo(color)        
+        this.$store.dispatch('setMensaje', 'You Picked Right!');               
+        this.$store.dispatch('setTermino', true);
       }
       else{
-         e.target.style.backgroundColor = "#232323";
-         this.mensaje = "Try Again!"         
-      }
-      this.$emit("mensaje-chequeo", this.mensaje);            
+         e.target.style.backgroundColor = "#232323";         
+         this.$store.dispatch('setMensaje', 'Try Again!');               
+      }      
 
     }
   },
